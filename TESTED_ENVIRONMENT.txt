@@ -1,0 +1,12 @@
+HealthAssist Agentic Platform v2
+Python 3.12
+14 automated tests passed after installing requirements.txt.
+Live provider responses and audio transcription require a user key and were not called.
+
+streamlit==1.66.1
+openai==2.54.0
+python-dotenv==1.2.4
+pypdf==6.21.2
+python-docx==1.2.0
+pandas==2.3.3
+pytest==9.1.1

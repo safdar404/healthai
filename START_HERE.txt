@@ -1,0 +1,11 @@
+HEALTHASSIST AGENTIC PLATFORM v2
+
+1. Extract the ZIP; open this whole folder in VS Code.
+2. Double-click run_windows.bat or follow README.md (Python 3.12).
+3. Use Overview -> Load fictional training records to explore without an API key.
+4. Select an encounter, then use Clinical Workspace, Care Tasks and Reports.
+5. Open AI Care Agent, supply your provider key, and opt into context sharing.
+6. Upload ALL files to GitHub; choose root app.py in Streamlit Cloud.
+
+Read FEATURE_GUIDE.md for all modules and tested workflows.
+Research support only: not diagnosis, prescribing or an emergency service.

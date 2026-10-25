@@ -1,23 +1,54 @@
-# HealthAssist · Agentic Care Companion
+# HealthAssist · Agentic Health Platform v2
 
-A self-contained **Python / Streamlit edition** for educational doctor–patient conversations using your own OpenAI or Gemini API key. This is a new companion app, not a full port of the previous React/AI Studio clinical platform. It does not include the original hospital registry, GIS surveillance, prescription engine or biometric login.
+A broader **Python / Streamlit workspace** built around the HealthAssist preview, with a context-aware, tool-calling agent. The previous companion chatbot has been expanded into an 11-section platform. This is still a research and educational implementation, not a clinically validated medical device or a production EHR.
 
-## What works
+## Working modules
 
-- Separate patient and doctor conversation styles; English, Urdu or bilingual replies.
-- Genuine bounded agent loop: the model chooses permitted tools; Python runs them and returns results before the final answer.
-- Tools: keyword document retrieval, BMI arithmetic, and an unreviewed clinician handoff draft.
-- PDF / DOCX / TXT / Markdown extraction with PDF page references and visible retrieval excerpts.
-- Typed questions; optional microphone recording → OpenAI transcription → user-reviewed text → chatbot. Replies are text, not spoken audio. Microphone requires browser permission and HTTPS or localhost.
-- Tool activity, source excerpts, conversation exports, local care-preparation forms.
-- Conservative keyword escalation warnings, plus model instructions to recognize urgent situations. The keyword screen is NOT validated triage and can miss urgent situations or flag historical/negated mentions.
-- Teal healthcare dashboard, custom logo and AI-generated clinician illustration.
+| Module | Implemented behavior |
+|---|---|
+| Overview | Session metrics derived from actual records, fictional training data loader and encounter table. |
+| Patient Intake | Five-section form: demographics, reported symptoms/onset, history, medicines/allergies and recording permission. |
+| Patient Registry | Alias/ID/district/concern search, record selection, editing, explicit removal and JSON export. |
+| Clinical Workspace | Measured vital signs, date/time entry, longitudinal charts, arithmetic trends, lab records, editable SOAP review notes and encounter summary. |
+| AI Care Agent | Patient/doctor styles; English/Urdu; OpenAI/Gemini; bounded model-selected tools; opt-in encounter/document context; visible tool results; source excerpts; draft downloads; optional OpenAI speech transcription. |
+| Care Tasks | User-created follow-up/appointment-preparation tasks, responsibility, planned date and status. No notifications or real booking. |
+| Facilities & GIS | User-maintained facility/clinician directory, filtering, optional external map, CSV export. No verified clinician network, live capacity or automated referral. |
+| Calculators | BMI, pulse pressure, estimated MAP, glucose-unit and temperature-unit conversions. Arithmetic only. |
+| References & Models | Official reference links and an honest component/method registry. No fabricated ML risk scores or regulatory compliance claims. |
+| Reports & Backup | Printable Unicode HTML (browser Print → PDF), per-encounter JSON, observation/directory/activity CSV and v2 workspace backup. Patient backup restoration validates fields before replacement. |
+| Settings | Provider/model configuration, clear/reset controls, implementation boundaries and deployment help. |
 
-No real physician messaging, appointment booking, email, live medical web search, OCR, vector embeddings, EHR integration or clinical validation is included. Do not use it to diagnose, prescribe, adjust medication or manage an emergency. Human clinicians must verify any suggestions. Doctor mode is a self-selected audience preference, not verified medical identity.
+The layout is fluid and readable, with a teal healthcare identity and custom assets. If the page appears extremely small, reset browser zoom with **Ctrl+0**; browser zoom is independent of Streamlit layout.
+
+## Seven actual agent tools
+
+1. `get_selected_patient_context`: only the opt-in selected de-identified encounter, not the whole registry.
+2. `compare_recorded_vitals`: chronological numerical differences; no diagnosis or clinical improvement inference.
+3. `search_documents`: keyword retrieval from included PDF/DOCX/TXT/Markdown text with source IDs.
+4. `calculate_bmi`: validated arithmetic from supplied measurements.
+5. `prepare_handoff`: unreviewed facts/questions draft; nothing sent.
+6. `draft_review_note`: unreviewed SOAP-style draft; no signature or automatic save.
+7. `draft_care_checklist`: preparation/discussion draft; no booking, notifications or prescriptions.
+
+The model selects tools, Python executes allowed functions, results return to the model, and the loop stops within four rounds. Unknown tools are blocked. There is no hidden network-search, messaging or booking tool.
+
+Selected-context sharing is **off by default**. Patient alias, ID, district and coordinates are excluded. Only the last 30 observations, 15 lab entries and 5 review notes are available, along with reported history. This is partial history; the agent is instructed to state uncertainty. Changing the selected encounter resets chat and uploaded documents, avoiding accidental reuse across patients.
+
+## Important boundaries
+
+- Doctor mode is self-selected and does not verify identity. User-marked review is not a digital medical signature.
+- No diagnosis, medication prescribing/dose adjustment, validated triage, CVD/eGFR risk engine, medication interaction database, emergency dispatch, live clinician chat or certified EHR integration is included.
+- Urgency text screening is conservative, unvalidated and incomplete; historical or negated descriptions can trigger it. A negative screen never means someone is safe.
+- No autonomous clinical decision or guaranteed “best treatment” is supplied. Discuss options with qualified professionals.
+- Records, tasks and activity are session-local on the Streamlit server. No multi-user database or durable server storage is implied. Export backups before the session ends.
+- Reports and backups are unencrypted. Activity logs are not tamper-proof compliance logs. Use de-identified training data unless a separately reviewed deployment meets your clinical/privacy requirements.
+- The facility directory is user supplied and not professionally verified. The optional map fetches external map tiles after opt-in.
+- Uploaded document text is extracted on the server. Scans/images need OCR elsewhere. Retrieval is keyword based, not vector search, and sources may be incomplete or outdated.
+- API/transcription usage is billed by your selected provider. The app has no access to real doctors, hospitals or messaging credentials.
 
 ## 1. Run in VS Code / Windows PowerShell
 
-Install **Python 3.12** (recommended), VS Code and its Microsoft Python extension. Extract the ZIP and open the `HealthAssist_Agentic_Streamlit` folder in VS Code. Open Terminal → New Terminal:
+Install **Python 3.12** (recommended), VS Code and its Microsoft Python extension. Extract the ZIP and open the `HealthAssist_Agentic_Platform` folder in VS Code. Open Terminal → New Terminal:
 
 ```powershell
 py -3.12 -m venv .venv
@@ -62,7 +93,7 @@ Replace `YOUR_USERNAME`. Or use GitHub's Upload files interface, including the `
 
 1. Sign in at https://share.streamlit.io/ with your GitHub account.
 2. Select **Create app**, the repository and branch `main`.
-3. Set main file path to **`app.py`** (if files are inside a subfolder, use `HealthAssist_Agentic_Streamlit/app.py`).
+3. Set main file path to **`app.py`** (if files are inside a subfolder, use `HealthAssist_Agentic_Platform/app.py`).
 4. Advanced settings: select **Python 3.12**.
 5. In Secrets, paste settings from `.streamlit/secrets.toml.example` and replace placeholders. For private shared-key use, set a strong `APP_ACCESS_PASSWORD` and the matching provider key. Keep `ALLOW_SHARED_KEY = "false"`.
 6. Deploy. For public BYOK use, leave server API keys blank; visitors supply their own sidebar key.
@@ -111,30 +142,30 @@ Tests cover tool validation, extraction, retrieval, escalation, multi-step tool 
 
 Sources inform implementation boundaries; this app is not endorsed by these organizations. No clinical guideline corpus is bundled, and general model knowledge may be outdated. Review before real use.
 
-## Source files for GitHub
 
-Upload the **contents** of this folder to your repository root (not just app.py). The complete Python source is in src/. This Python Streamlit edition uses Python modules rather than the original React application's TSX components.
+## Expanded source tree
 
 ```text
-app.py                         # Streamlit launcher; Cloud main file
-src/
-  app.py                       # Complete Streamlit UI
-  healthassist/
-    __init__.py
-    agent.py                   # Provider clients and tool-calling loop
-    core.py                    # Retrieval, extraction, escalation and tools
-    style.css                  # Healthcare styling
-assets/                        # Logo and clinician image
-tests/                         # Automated tests + source path setup
-.streamlit/config.toml         # Streamlit theme and upload limits
-.streamlit/secrets.toml.example # Template only; never commit actual secrets
-.env.example                   # Local key template
-.github/workflows/tests.yml    # GitHub Actions checks
-.vscode/launch.json            # VS Code F5 configuration
+app.py                          # Root Streamlit launcher (Cloud main file)
+src/app.py                      # Main platform navigation and access gate
+src/healthassist/
+  agent.py                      # Provider clients, seven tools and agent loop
+  core.py                       # Extraction, retrieval, handoff, BMI and text screening
+  workspace.py                  # Records, trends, backup validation and printable reports
+  pages.py                      # Dashboard, intake, registry, clinical UI, maps, tasks, reports
+  chat.py                       # API conversation, documents, voice, traces and exports
+  style.css                     # Fluid healthcare styling
+  __init__.py
+assets/                         # Custom logo + AI-generated clinician image
+tests/                          # Automated core, agent, workspace and page-flow checks
+.streamlit/                     # Theme configuration + secrets example
+.github/workflows/tests.yml     # CI checks on push
+.vscode/launch.json             # VS Code F5 launcher
 requirements.txt
 requirements-dev.txt
-run_windows.bat
-run_macos_linux.sh
+.env.example
+FEATURE_GUIDE.md
+README.md
 ```
 
-On Streamlit Cloud choose **app.py**, not src/app.py, so the launcher configures the source path.
+Upload ALL source and asset folders. Keep `app.py` as the Streamlit Cloud main file. Do not upload `.env`, real `secrets.toml`, `.venv` or exported patient data. This ZIP is a new v2 package; it is not automatically deployed or pushed to a remote repository.
